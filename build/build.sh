@@ -3,7 +3,7 @@
 # shellcheck disable=SC1091
 source metadata
 
-cd ../project || exit
+cd ../project || exit 1
 
 # shellcheck disable=SC2016
 find . -type f -not -path "./build/*" \
