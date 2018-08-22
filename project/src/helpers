@@ -474,10 +474,10 @@ function _load() {
     _filename="$_type"
 
     # If the file exists is loaded.
-    . "$_filename" && \
+    . "${_lib}/${_filename}" && \
     _logger "info" \
       "${_FUNCTION_ID}()" \
-      "configuration file: '$_filename'"
+      "load function from standard library: '${_lib}/${_filename}'"
 
   else
 
