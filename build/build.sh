@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# shellcheck disable=SC1091
+# shellcheck shell=bash
+# shellcheck disable=SC1091,SC2034
+
 source metadata
 
 cd ../project || exit 1
