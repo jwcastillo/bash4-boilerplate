@@ -1,0 +1,564 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+
+################################################################################
+######################### Main function (script init) ##########################
+################################################################################
+
+function __main__() {
+
+  local _FUNCTION_ID="__main__"
+  local _STATE="0"
+
+  # Stores the current date.
+  readonly _cdate=$(date +%Y%m%d)
+
+  # Variables related to the log file. Divided into three parts due
+  # to the better possibility of manipulation for the user.
+  # shellcheck disable=SC2154
+  readonly _log_directory="${_rel}/log"
+  # shellcheck disable=SC2154
+  readonly _log_file="${_init_name}.${_cdate}.log"
+  readonly _log_stdout="${_log_directory}/stdout.log"
+  readonly _log_path="${_log_directory}/${_log_file}"
+
+  readonly _scan_output="${_log_directory}/scan.out"
+
+  # We check if we are a root user.
+  # if [[ "$EUID" -ne 0 ]] ; then
+  #
+  #   printf "EUID is not equal 0 (no root user)\\n"
+  #   _exit_ "1"
+  #
+  # fi
+
+  # Path to import file.
+  # shellcheck disable=SC2154
+  readonly _import_path="${_src}/import"
+
+  # External configuration file (-c|--config script param).
+  config=""
+  load_state="0"
+
+  # Declaration of output variables (--debug and --verbose params).
+  stdout_mode=""
+  # shellcheck disable=SC2034
+  verbose_mode="false"
+
+  # Enable/disable output colors.
+  # shellcheck disable=SC2034
+  s_color="true"
+
+  # Default 'domain' variables.
+  local domain_state="0"
+  local domain_type=""
+
+  # Default 'ssl' variable.
+  local ssl_state="0"
+
+  # Default 'headers' variable.
+  local headers_state="0"
+
+  # Default 'domain' variables.
+  local scan_state="0"
+  local scan_type=""
+
+  # Default 'mixed-content' variable.
+  local mixed_content_state="0"
+
+  # Default 'nmap-nse' variable.
+  local nse_state="0"
+
+  # Set default User-Agent.
+  # shellcheck disable=SC2034
+  local user_agent_state="0"
+  local _user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"
+
+  # Set redirects limit.
+  local max_redirects_state="0"
+  local _redirects=10
+
+  # Default timeout value for.
+  local _timeout="15"
+
+  # We place here used commands at script runtime, as strings to anything
+  # unnecessarily run.
+  readonly commands=(basename dirname stat ps date grep cut sed awk chown \
+                     chmod mkdir curl openssl dig bc \
+                     observatory ssllabs-scan mixed-content-scan nmap)
+
+  # If you intend to specify the full path to the command we do it like:
+  # readonly exec_gzip="/bin/gzip"
+
+  # Stores the names of the missing commands.
+  missing_hash=()
+  missing_counter="0"
+
+  for i in "${commands[@]}" ; do
+
+    if [[ ! -z "$i" ]] ; then
+
+      hash "$i" >/dev/null 2>&1 ; state="$?"
+
+      # If the command was not found put it in the array
+      if [[ "$state" -ne 0 ]] ; then
+
+        missing_hash+=("$i")
+        ((missing_counter++))
+
+      fi
+
+    fi
+
+  done
+
+  # It is a good idea to terminate the script at this stage
+  # with information for the user to fix the errors if at least one
+  # of the required commands in the commands array is not found.
+  if [[ "$missing_counter" -gt 0 ]] ; then
+
+    printf "not found in PATH: %s\\n" "${missing_hash[*]}" >&2
+    _exit_ "1"
+
+  fi
+
+  # shellcheck disable=SC2154
+  _logger "init" \
+    "init '${_init_name}' in '${_init_directory}'" && \
+  _logger "info" \
+    "__init_params[] = (${__init_params[*]})," \
+    "__script_params[] = (${__script_params[*]})"
+
+  # Include import file.
+  _load "null" "$_import_path"
+
+  # Specifies the call parameters of the script, the exact description
+  # can be found in _help_ and file README.md.
+  local _short_opt="d:sh"
+  local _long_opt="help,domain:,ssl,headers,scan:,mixed-content,nse,user-agent:,max-redirects:,timeout:"
+
+  _GETOPT_PARAMS=$(getopt -o "${_short_opt}" --long "${_long_opt}" \
+                   -n "${_init_name}" -- "${__script_params[@]}")
+
+  # With this structure, in the case of problems with the parameters placed
+  # in the _GETOPT_PARAMS variable we finish the script. Keep this in mind
+  # because it has some consequences - the __main __() function will not be
+  # executed.
+
+  # Ends an error if the parameter or its argument is not valid.
+  _getopt_state="$?"
+  if [ "$_getopt_state" != 0 ] ; then
+    _exit_ "1"
+  # Ends if no parameter is specified.
+  elif [[ "${#__script_params[@]}" -eq 0 ]] ; then
+    _exit_ "0"
+  fi
+
+  eval set -- "$_GETOPT_PARAMS"
+  while true ; do
+
+    case $1 in
+
+      --help)
+
+        _help_
+
+        shift ; _exit_ "0" ;;
+
+      -d|--domain)
+
+        export domain_state=1
+
+        export domain_type="${2}"
+
+        shift 2 ;;
+
+      -s|--ssl)
+
+        export ssl_state=1
+
+        shift ;;
+
+      -h|--headers)
+
+        export headers_state=1
+
+        shift ;;
+
+      --scan)
+
+        export scan_state=1
+
+        export scan_type="${2}"
+
+        shift 2 ;;
+
+      --mixed-content)
+
+        export mixed_content_state=1
+
+        shift ;;
+
+      --nse)
+
+        export nse_state=1
+
+        shift ;;
+
+      --user-agent)
+
+        export user_agent_state=1
+
+        export _user_agent="${2}"
+
+        shift 2 ;;
+
+      --max-redirects)
+
+        export max_redirects_state=1
+
+        export _redirects="${2}"
+
+        shift 2 ;;
+
+      --timeout)
+
+        export timeout_state=1
+
+        export _timeout="${2}"
+
+        shift 2 ;;
+
+      *)
+
+        if [[ "$2" == "-" ]] || [[ ! -z "$2" ]] ; then
+
+          printf "%s: invalid option -- '%s'\\n" "$_init_name" "$2"
+          _exit_ "1"
+
+        # elif [[ -z "$2" ]] ; then break ; fi
+        else break ; fi
+
+        ;;
+
+    esac
+
+  done
+
+  # If you run the script in debug mode, the information
+  # will be displayed on the screen from this point.
+  if [[ "$stdout_mode" == "debug" ]] ; then
+
+    _logger "info" \
+      "${_FUNCTION_ID}()" \
+      "starting debug mode"
+
+  fi
+
+  # Running tasks before start user functions.
+  _before_init
+
+  ################################# USER SPACE #################################
+  # ````````````````````````````````````````````````````````````````````````````
+  # Put here all your variable declarations, function calls
+  # and all the other code blocks.
+
+  # In this section we add external file (for -c|--config script param).
+  if [[ "$load_state" -eq 1 ]] ; then _load "head" "$config" ; fi
+
+  # shellcheck disable=SC2034
+  # Generate random value.
+  _random=$(date +"%s")
+
+  # Array that stores the names of variables used that are part of the script
+  # call parameters (_GETOPT_PARAMS). Useful when checking whether all
+  # or selected parameters without which the script can not work properly
+  # have been used. Do not add the load_state variable to the _opt_values array,
+  # which is supported above.
+  _opt_values=("domain_state" "domain_type")
+
+  # Checking the value of the variables (if they are unset or empty):
+  #   - variables for call parameters
+  #   - variables from the additional configuration files
+  if [[ "${#_opt_values[@]}" -ne 0 ]] ; then
+
+    for i in "${_opt_values[@]}" ; do
+
+      _i="" ; eval _i='$'"$i"
+
+      _logger "info" \
+        "${_FUNCTION_ID}()" \
+        "$i: '$_i'"
+
+      if [[ -z "$_i" ]] ; then
+
+        _sprintf "stop" "error of argument value: '$i' is unset or empty"
+
+        _logger "stop" \
+          "${_FUNCTION_ID}()" \
+          "error of argument value: '$i' is unset or empty"
+
+      fi
+
+    done
+
+  fi
+
+  # Strip domain name.
+  DomainStrip "$domain_type"
+
+  # shellcheck disable=SC2154
+  # Set -d|--domain value to variable.
+  local _http_redirect="${_domain_proto}${_domain_name}${_domain_path}"
+
+  # Set default colors for printf.
+  # shellcheck disable=SC2034
+  local b_trgb="1;2;30"
+  # shellcheck disable=SC2034
+  local e_trgb="1;1;31"
+  # shellcheck disable=SC2034
+  local e2_trgb="0;0;31"
+  # shellcheck disable=SC2034
+  local g_trgb="1;1;32"
+  # shellcheck disable=SC2034
+  local g2_trgb="0;0;32"
+  # shellcheck disable=SC2034
+  local d_trgb="4;1;33"
+  # shellcheck disable=SC2034
+  local d2_trgb="0;0;33"
+  # shellcheck disable=SC2034
+  local s_trgb="2;2;34"
+  # shellcheck disable=SC2034
+  local h_trgb="1;2;36"
+  # shellcheck disable=SC2034
+  local p_trgb="2;2;37"
+  # shellcheck disable=SC2034
+  local p2_trgb="2;0;37"
+  # shellcheck disable=SC2034
+  local c_trgb="1;1;38"
+  # shellcheck disable=SC2034
+  local x_trgb="1;2;38"
+
+  # shellcheck disable=SC2154
+  printf '\n    %s %s\n\n' \
+         "$_init_name" "$_version"
+
+  # Show http(s) domain trace.
+  printf '\n    URI: \e['${d_trgb}'m%s\e['${d_trgb}'m%s\e['${d_trgb}'m%s\e[m\n' \
+         "$_domain_proto" "$_domain_name" "$_domain_path"
+
+  # Start tracing.
+  local _http_code="300"
+
+  # Temporary variables.
+  local _req_num=0
+  # shellcheck disable=SC2034
+  local _full_conn_time="0.000000"
+
+  # shellcheck disable=SC2034
+  local _rcounter=1
+  # shellcheck disable=SC2034
+  local _hcounter=1
+  # shellcheck disable=SC2034
+  local _scounter=5
+
+  while [[ ${_http_code} =~ ^3[0-9]{2}$ ]] ; do
+
+    # Prevention of redirection loops.
+    if [[ "$_rcounter" -gt "$_redirects" ]] ; then
+
+      if [[ "$max_redirects_state" -eq 1 ]] ; then
+
+        printf '\n    %s: \e['${e_trgb}'m%s\e[m\n\n' \
+               "Max redirects" "$_redirects"
+
+        _logger "stop" \
+          "${_FUNCTION_ID}()" \
+          "Max redirects: $_redirects"
+
+      else
+
+        printf '\n    %s \e['${e_trgb}'m%s\e[m\n\n' \
+               "Redirect loop: limit is" "$_redirects"
+
+        _logger "stop" \
+          "${_FUNCTION_ID}()" \
+          "Redirect loop: limit is $_redirects"
+
+      fi
+
+    else
+
+      # shellcheck disable=SC2034,SC2154
+      _req_num=$((_req_num + 1))
+
+      _http_last="$_http_redirect"
+
+      DomainTrace "$_http_redirect"
+
+      _rcounter=$((_rcounter + 1))
+
+    fi
+
+  done
+
+  echo
+
+  if [[ "$scan_state" -eq 1 ]] ; then
+
+    if [[ "$scan_type" = *"observatory"* ]] ; then
+
+      DomainStrip "$_http_last"
+
+      _init_function "DomainScan \"$scan_type\" \"$_domain_name\""
+
+      _fstate="$?"
+
+      if [[ "$_fstate" -ne 0 ]] ; then
+
+        # shellcheck disable=SC2086,SC2154
+        printf '\r\n    \e['${e_trgb}'m%s\e[m\n\n' "Connection error"
+        tput sgr0
+
+      fi
+
+      echo
+
+    elif [[ "$scan_type" = *"ssllabs"* ]] ; then
+
+      DomainStrip "$_http_last"
+
+      _init_function "DomainScan \"$scan_type\" \"$_domain_name\""
+
+      _fstate="$?"
+
+      if [[ "$_fstate" -ne 0 ]] ; then
+
+        # shellcheck disable=SC2086,SC2154
+        printf '\r\n    \e['${e_trgb}'m%s\e[m\n\n' "Connection error"
+        tput sgr0
+
+      else
+
+        printf '\r         › %s: %s\n' \
+               "Full Report Url" \
+               "https://www.ssllabs.com/ssltest/analyze.html?d=$_domain_name"
+        tput sgr0
+
+      fi
+
+      echo
+
+    elif [[ "$scan_type" = *"all"* ]] ; then
+
+      DomainStrip "$_http_last"
+
+      for _i in observatory ssllabs ; do
+
+        _init_function "DomainScan \"$_i\" \"$_domain_name\""
+
+        _fstate="$?"
+
+        if [[ "$_fstate" -ne 0 ]] ; then
+
+          # shellcheck disable=SC2086,SC2154
+          printf '\r\n    \e['${e_trgb}'m%s\e[m\n\n' "Connection error"
+          tput sgr0
+
+        else
+
+          if [[ "$_i" == "ssllabs" ]] ; then
+
+            printf '\r         › %s: %s\n' \
+                   "Full Report Url" \
+                   "https://www.ssllabs.com/ssltest/analyze.html?d=$_domain_name"
+            tput sgr0
+
+          fi
+
+        fi
+
+        echo
+
+      done
+
+    fi
+
+  fi
+
+  if [[ "$mixed_content_state" -eq 1 ]] ; then
+
+    local _fd_empty="0"
+
+    DomainStrip "$_http_last"
+
+    _init_function "DomainMixedContent \"${_domain_proto}${_domain_name}\""
+
+    _fstate="$?"
+
+    if [[ "$_fstate" -ne 0 ]] ; then
+
+      # shellcheck disable=SC2154
+      if [[ "$_fd_empty" -eq "0" ]] ; then
+
+        # shellcheck disable=SC2086,SC2154
+        printf '\r         › \e['${g_trgb}'m%s\e[m\n' "Mixed content not found"
+        tput sgr0
+
+      else
+
+        # shellcheck disable=SC2086,SC2154
+        printf '\r         › \e['${e_trgb}'m%s\e[m\n' "Connection error"
+        tput sgr0
+
+      fi
+
+    else
+
+      # shellcheck disable=SC2154
+      if [[ "$_fd_empty" -eq "0" ]] ; then
+
+        # shellcheck disable=SC2086,SC2154
+        printf '\r         › \e['${g_trgb}'m%s\e[m\n' "Mixed content not found"
+        tput sgr0
+
+      else
+
+        printf '\r'
+        tput sgr0
+
+      fi
+
+    fi
+
+    echo
+
+  fi
+
+if [[ "$nse_state" -eq 1 ]] ; then
+
+    DomainStrip "$_http_last"
+
+    # shellcheck disable=SC2154
+    _init_function "DomainNmapNse \"${_domain_name}\" \"${_remote_port}\""
+
+    _fstate="$?"
+
+    if [[ "$_fstate" -ne 0 ]] ; then
+
+      # shellcheck disable=SC2086,SC2154
+      printf '\r\n    \e['${e_trgb}'m%s\e[m\n\n' "Connection error"
+      tput sgr0
+
+    fi
+
+    echo
+
+  fi
+
+  # ````````````````````````````````````````````````````````````````````````````
+
+  return "$_STATE"
+
+}
