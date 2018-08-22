@@ -161,11 +161,6 @@ function __main__() {
   # Running tasks before start user functions.
   _before_init
 
-  ################################# USER SPACE #################################
-  # ````````````````````````````````````````````````````````````````````````````
-  # Put here all your variable declarations, function calls
-  # and all the other code blocks.
-
   # Array that stores the names of variables used that are part of the script
   # call parameters (_GETOPT_PARAMS). Useful when checking whether all
   # or selected parameters without which the script can not work properly
@@ -199,6 +194,16 @@ function __main__() {
     done
 
   fi
+
+  ################################# USER SPACE #################################
+  # ````````````````````````````````````````````````````````````````````````````
+  # Put here all your variable declarations, function calls
+  # and all the other code blocks.
+
+  # Load external function (from lib/standard directory).
+  _load lib/standard/trim_string
+
+
 
   # ````````````````````````````````````````````````````````````````````````````
 

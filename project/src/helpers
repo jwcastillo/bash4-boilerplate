@@ -431,8 +431,11 @@ function _init_cmd() {
 # Usage:
 #   _load "type" "path_to_config_file"
 #
+# Examples for standard libraries::
+#   _load lib/standard/<filename>
+#
 # Examples:
-#   _load "info" "$config"
+#   _load "null" "$config"
 #   _load "head" "/tmp/file.cfg"
 #
 
@@ -467,11 +470,14 @@ function _load() {
 
   elif [ -z "$_filename" ] ; then
 
-    _sprintf "stop" "incorrectly loaded '$_filename' file (incorrect filename)"
+    # Without using _sprintf.
+    _filename="$_type"
 
-    _logger "stop" \
+    # If the file exists is loaded.
+    . "$_filename" && \
+    _logger "info" \
       "${_FUNCTION_ID}()" \
-      "incorrectly loaded '$_filename' file (incorrect filename)"
+      "configuration file: '$_filename'"
 
   else
 

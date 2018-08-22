@@ -28,6 +28,9 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 #   0077 - only for user access (more restrictive)
 umask 0027
 
+# Import external function, e.g.:
+# import lib/trim_string
+
 # Run script only with you're root.
 if_root="true"
 
