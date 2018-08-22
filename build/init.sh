@@ -3,7 +3,7 @@
 # shellcheck disable=SC1091
 source metadata
 
-cd ../ || exit
+cd ../project || exit
 
 find . -type f -not -path "./build/*" \
        -exec sed -i -e "s/__DATE__/$__DATE__/g" {} \;

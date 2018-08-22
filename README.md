@@ -1,17 +1,4 @@
-# `__NAME__`
-
-<br>
-
-<p align="left">
-  <a href="__REPO__/__NAME__">
-    <img src="__REPO__/__NAME__.svg?branch=master"
-        alt="Travis-CI">
-  </a>
-  <a href="__REPO__/__NAME__/tree/master/build">
-    <img src="https://img.shields.io/badge/Docker-Support-blue.svg"
-        alt="Docker">
-  </a>
-</p>
+# `bash4-boilerplate`
 
 <br>
 
@@ -19,72 +6,24 @@
 
 __LONG_DESCRIPTION__
 
-  > Before use **__NAME__** please see **[Requirements](#requirements)**.
-
 ## How To Use
 
 It's simple:
 
 ```bash
 # Clone this repository
-git clone __REPO__/__NAME__
+git clone https://github.com/trimstray/bash4-boilerplate
 
 # Go into the repository
-cd __NAME__
+cd bash4-boilerplate
 
-# Install
-./setup.sh install
+# Edit build/metadata and run
+cd build
+./init.sh
 
 # Run the app
-__NAME__ <params>
-```
-
-> * symlink to `bin/__NAME__` is placed in `/usr/local/bin`
-> * man page is placed in `/usr/local/man/man8`
-
-## External tools
-
-**__NAME__** support external tools for security scans:
-
-## Docker
-
-The configuration is contained in the **Dockerfile**.
-
-### Build image
-
-```bash
-cd __NAME__/build
-docker build --rm -t __NAME__ -f Dockerfile .
-```
-
-### Run container
-
-```bash
-docker run --rm -it --name __NAME__ __NAME__ -d <params>
-```
-
-## Requirements
-
-This tool working with:
-
-- **GNU/Linux** (testing on Debian and CentOS)
-- **[Bash](https://www.gnu.org/software/bash/)** (testing on 4.4.19)
-
-## Parameters
-
-Provides the following options:
-
-```bash
-    __NAME__ __VERSION__
-
-Usage:
-    __NAME__ <option|long-option>
-
-  Examples:
-    __NAME__ --help
-
-  Options:
-        --help                                show this message
+cd ../sample
+./bin/sample.sh
 ```
 
 ## Contributing
