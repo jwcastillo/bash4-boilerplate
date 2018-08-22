@@ -431,8 +431,8 @@ function _init_cmd() {
 # Usage:
 #   _load "type" "path_to_config_file"
 #
-# Examples for standard libraries::
-#   _load lib/standard/<filename>
+# Examples for standard library:
+#   _load standard/<filename>
 #
 # Examples:
 #   _load "null" "$config"
