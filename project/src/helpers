@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2086,SC2143,SC2154
 
 ################################################################################
 ####################### Definitions of global functions ########################
@@ -84,7 +85,6 @@ function _get_trap_SIG() {
     # Running tasks before the end of the script.
     _after_init
 
-    # shellcheck disable=SC2034
     for i in "${_to_unset[@]}" ; do unset i ; done
 
     # You can cover the code supplied from the _exit_() function
@@ -153,12 +153,10 @@ function _logger() {
   _to_log=$(shift ; echo "$@")
   _conv_type=$(echo "$_type" | tr '[:lower:]' '[:upper:]')
 
-  # shellcheck disable=SC2154
   if [[ ! -d "$_log_directory" && ! -L "$_log_directory" ]] ; then
     mkdir -p "$_log_directory" ; fi
 
   # Normal debug mode (output the same as the contents of the log file).
-  # shellcheck disable=SC2154
   if [[ "$stdout_mode" == "debug" ]] ; then
 
     printf "%s  %s:  [%s] %s\\n" \
@@ -215,20 +213,15 @@ function _sprintf() {
 
   # Determine the type of character and color for each type
   # of output information.
-  if [[ "$_s_type" == "head" ]] ; then
+  if [[ "$_s_type" == "info" ]] ; then
+
+    s_char="•"
+    s_trgb="1;0;32"
+
+  elif [[ "$_s_type" == "head" ]] ; then
 
     s_char="+"
     s_trgb="1;1;33"
-
-  elif [[ "$_s_type" == "info" ]] ; then
-
-    s_char="•"
-    s_trgb="1;0;32"
-
-  elif [[ "$_s_type" == "pass" ]] ; then
-
-    s_char="•"
-    s_trgb="1;0;32"
 
   elif [[ "$_s_type" == "warn" ]] ; then
 
@@ -264,12 +257,10 @@ function _sprintf() {
       # Invisible cursor.
       tput civis
 
-      # shellcheck disable=SC2143
       while [[ $(ps a | awk '{print $1}' | grep -w "$_pid") ]] ; do
 
         _n=$(( ( _n + 1 ) % 4 ))
 
-        # shellcheck disable=SC2086
         printf '\r » \e['${c_trgb}'m%s\e[m' "${_sc:_n:1}" ; tput sgr0
 
         sleep 0.1
@@ -294,7 +285,6 @@ function _sprintf() {
       # - spinner completed
 
       # If verbose mode is enabled, display info message.
-      # shellcheck disable=SC2154
       if [[ "$printf_mode" == "verbose" ]] && [[ "$_s_type" == "info" ]] ; then
 
         printf '[\e['${s_trgb}'m%s\e[m] %s\n' "$s_char" "$_s_info"
@@ -353,20 +343,6 @@ function _sprintf() {
 
   fi
 
-  # shellcheck disable=SC2034,SC2154
-  if [[ "$mixed_content_state" -eq 1 ]] && [[ -s "$_scan_output" ]] ; then
-
-    _fd_empty="1"
-
-  fi
-
-  # shellcheck disable=SC2154
-  sed 's/^/         › /' "$_scan_output" | \
-  sed 's/\r//' | grep "› ."
-
-  # shellcheck disable=SC2154
-  : >"$_scan_output"
-
   return "$_STATE"
 
 }
@@ -392,7 +368,6 @@ function _init_cmd() {
   local _cmd="$1"
 
   # If the scanning command returns an error, we try again.
-  # shellcheck disable=SC2086,SC2154
   for i in $(seq 1 $_scounter) ; do
 
     _logger "info" \
@@ -400,8 +375,7 @@ function _init_cmd() {
       "init: $_cmd (counter: $i)"
 
     # Execute command and exit save to file.
-    # shellcheck disable=SC2154
-    $_cmd >"$_scan_output" 2>&1 &
+    $_cmd >"$_cmd_output" 2>&1 &
 
     # We keep pid of the last command.
     _pid="$!"
@@ -423,76 +397,23 @@ function _init_cmd() {
 
     else
 
-      _logger "info" \
-        "${_FUNCTION_ID}()" \
-        "result: fail"
+      if [[ "$ignore_failed" -eq 1 ]] ; then
+
+        _logger "warn" \
+          "${_FUNCTION_ID}()" \
+          "result: fail"
+
+      else
+
+        _logger "stop" \
+          "${_FUNCTION_ID}()" \
+          "result: fail"
+
+      fi
 
     fi
 
     _STATE="$_state"
-
-  done
-
-  return "$_STATE"
-
-}
-
-# ``````````````````````````````````````````````````````````````````````````````
-# Function name: _init_function()
-#
-# Description:
-#   It deals with launching functions:
-#     - creates a simple environment for the functions you perform
-#     - operates on message to display and command to execute
-#
-# Usage:
-#   _init_function function_name params
-#
-# Examples:
-#   _init_function "CheckConn 172.20.20.50 22"
-#
-
-function _init_function() {
-
-  local _FUNCTION_ID="_init_function"
-  local _STATE="0"
-
-  _kstate=0
-
-  local _args=("$@")
-
-  _logger "info" \
-    "${_FUNCTION_ID}()" \
-    "init function: '${_args[*]}'"
-
-  # In these two variables we store the message to display
-  # and the command to execute.
-  export _msg_args=()
-  export _cmd_args=()
-
-  eval "${_args[@]}" ; if [ ! $? ] ; then _exit_ 255 ; fi
-
-  _num="${#_msg_args[@]}"
-  for (( _xa="0" ; _xa<=((_num - 1)) ; _xa++ )) ; do
-
-    _msg="${_msg_args[$_xa]}"
-    _full_command="${_cmd_args[$_xa]}"
-
-    # _sprintf "info" "$_msg"
-    _msg_x=$(echo "$_msg" | cut -d ":" -f1)
-    _msg_y=$(echo "$_msg" | cut -d ":" -f2-)
-    # shellcheck disable=SC2086,SC2154
-    printf '    \e['${c_trgb}'m%s\e[m \e['${p_trgb}'m(%s)\e[m\n\n' \
-           "$_msg_x" "$_msg_y"
-
-    _logger "info" \
-      "${_FUNCTION_ID}()" \
-      "$_msg"
-
-    _init_cmd "$_full_command"
-
-    # shellcheck disable=SC2034
-    if [ ! "$?" ] ; then _kstate=255 ; fi
 
   done
 
@@ -538,7 +459,6 @@ function _load() {
 
     fi
 
-    # shellcheck disable=SC1090
     # If the file exists is loaded.
     . "$_filename" && \
     _logger "info" \
@@ -593,20 +513,11 @@ function _help_() {
     $_init_name <option|long-option>
 
   Examples:
-    $_init_name --domain https://example.com
-    $_init_name --domain https://example.com -s -h --scan ssllabs
+    $_init_name --help
 
   Options:
-        --help                                show this message
-        -d|--domain <domain_name>             set domain name
-        -s|--ssl                              show ssl server/connection params
-        -h|--headers                          show response headers
-        --scan <all|observatory|ssllabs>      scan domain with external security tools
-        --mixed-content                       scan website for mixed content
-        --nse                                 scan website with nmap nse library
-        --user-agent <val>                    set 'User-Agent' header
-        --max-redirects <num>                 set max redirects (default: 10)
-        --timeout <num>                       set max timeout (default: 15)
+        --help                      show this message
+        --ignore-failed             do not exit with nonzero on commands failed
 
 
   This program comes with ABSOLUTELY NO WARRANTY.
@@ -647,7 +558,7 @@ function _before_init() {
     "directory change error: '$_init_directory'"
 
   # shellcheck disable=SC2154
-  : >"$_log_stdout"
+  : >"$_cmd_output"
 
   # Invisible cursor.
   # tput civis
@@ -680,9 +591,6 @@ function _after_init() {
   _logger "stop" \
     "${_FUNCTION_ID}()" \
     "directory change error: '$_init_directory'"
-
-  # shellcheck disable=SC2154
-  : >"$_scan_output"
 
   return $_STATE
 

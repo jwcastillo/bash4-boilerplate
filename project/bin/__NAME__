@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2154
+
 ### BEG SCRIPT INFO
 #
 # Header:
@@ -34,8 +37,10 @@
 ### END SCRIPT INFO
 
 
+# Set script version.
+readonly _version="__VERSION__"
+
 # The array that store call parameters.
-# shellcheck disable=SC2034
 __init_params=()
 __script_params=("$@")
 
@@ -47,19 +52,22 @@ readonly _init_directory="$(dirname "$(readlink -f "$0")")"
 readonly _rel="${_init_directory}/.."
 
 # Directory structure.
-# shellcheck disable=SC2154
 readonly _src="${_rel}/src"
 readonly _lib="${_rel}/lib"
+readonly _tmp="${_rel}/tmp"
 
-# shellcheck disable=SC1090,SC1091
+# Import external important files.
 source "${_src}/settings"
-# shellcheck disable=SC1090
 source "${_src}/helpers"
-# shellcheck disable=SC1090
 source "${_src}/__init__"
 
-readonly _version="__VERSION__"
+# We check if we are a root user.
+if [[ "$EUID" -ne 0 ]] && [[ "$if_root" == "true" ]] ; then
 
+  printf "EUID is not equal 0 (no root user)\\n"
+  _exit_ "1"
+
+fi
 
 # We pass arguments to the __main__ function.
 # It is required if you want to run on arguments type $1, $2, ...

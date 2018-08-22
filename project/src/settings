@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2154,SC2173
 
 ################################################################################
 ################## The configuration parameters of the script ##################
@@ -27,9 +28,25 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 #   0077 - only for user access (more restrictive)
 umask 0027
 
+# Run script only with you're root.
+if_root="true"
+
+# Enable/disable output colors.
+s_color="true"
+
+# Set default colors for printf.
+b_trgb="1;2;30"
+e_trgb="1;1;31"
+g_trgb="1;1;32"
+d_trgb="4;1;33"
+s_trgb="2;2;34"
+h_trgb="1;2;36"
+p_trgb="2;2;37"
+c_trgb="1;1;38"
+x_trgb="1;2;38"
+
 # Catch the listed SIGNALS, which may be signal names with or without the SIG
 # prefix, or signal numbers. By default, only the signal 0 or EXIT is supported.
 trap "_get_trap_SIG EXIT" EXIT
 
-# shellcheck disable=SC2173
 # trap "_get_trap_SIG SIGS" SIGHUP SIGTERM SIGKILL SIGINT
