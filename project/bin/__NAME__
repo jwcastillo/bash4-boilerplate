@@ -61,13 +61,6 @@ source "${_src}/settings"
 source "${_src}/helpers"
 source "${_src}/__init__"
 
-# We check if we are a root user.
-if [[ "$EUID" -ne 0 ]] && [[ "$if_root" == "true" ]] ; then
-
-  printf "EUID is not equal 0 (no root user)\\n"
-  _exit_ "1"
-
-fi
 
 # We pass arguments to the __main__ function.
 # It is required if you want to run on arguments type $1, $2, ...

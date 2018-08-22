@@ -29,6 +29,14 @@ function __main__() {
   # Path to import file.
   readonly _import_path="${_src}/import"
 
+  # We check if we are a root user.
+  if [[ "$EUID" -ne 0 ]] && [[ "$if_root" == "true" ]] ; then
+
+    printf "EUID is not equal 0 (no root user)\\n"
+    _exit_ "1"
+
+  fi
+
   # Declaration of output variables (--debug and --verbose params).
   stdout_mode=""
   printf_mode=""
