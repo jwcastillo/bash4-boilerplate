@@ -112,7 +112,8 @@ function __main__() {
     _exit_ "1"
   # Ends if no parameter is specified.
   elif [[ "${#__script_params[@]}" -eq 0 ]] ; then
-    _exit_ "0"
+    # _exit_ "0"
+    true
   fi
 
   eval set -- "$_GETOPT_PARAMS"
