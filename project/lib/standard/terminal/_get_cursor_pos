@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2154
+
+function _get_cursor_pos() {
+
+  # Usage: _get_cursor_pos
+
+  IFS='[;' read -p $'\e[6n' -d R -rs _ y x _
+  printf '%s\n' "$x $y"
+
+}

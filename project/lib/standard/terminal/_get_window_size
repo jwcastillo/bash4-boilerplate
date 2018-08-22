@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2154
+
+function _get_window_size() {
+
+  # Usage: _get_window_size
+
+  printf '%b' "${TMUX:+\\ePtmux;\\e}\\e[14t${TMUX:+\\e\\\\}"
+  IFS=';t' read -d t -t 0.05 -sra term_size
+  printf '%s\n' "${term_size[1]}x${term_size[2]}"
+
+}

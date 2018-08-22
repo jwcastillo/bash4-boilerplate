@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2048,SC2086,SC2154
+
+function _trim_quotes() {
+
+  # Usage: _trim_quotes "string"
+
+  : "${1//\'}"
+  printf '%s\n' "${_//\"}"
+
+}

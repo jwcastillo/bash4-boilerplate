@@ -6,22 +6,32 @@ __LONG_DESCRIPTION__
 
 ## How To Use
 
-It's simple:
+1. Clone this repository
 
 ```bash
-# Clone this repository
 git clone https://github.com/trimstray/bash4-boilerplate
+```
 
-# Go into the repository
+2. Go into the repository
+
+```bash
 cd bash4-boilerplate
+```
 
-# Edit build/metadata and run
+3. Edit `build/metadata` and run
+
+```bash
 cd build
 ./init.sh
+```
 
-# Run the app
-cd ../sample
-./bin/sample.sh
+4. Prepare your bash script
+
+5. First start!
+
+```bash
+cd ../your-script.sh
+./bin/your-script.sh --help
 ```
 
 ## Contributing

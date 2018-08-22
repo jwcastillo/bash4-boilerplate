@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2048,SC2086,SC2154
+
+function _trim_all() {
+
+  # Usage: _trim_all "   example   string    "
+
+  set -f
+  set -- $*
+  printf '%s\n' "$*"
+  set +f
+
+}

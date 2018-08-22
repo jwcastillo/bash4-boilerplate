@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2154
+
+function _rgb_to_hex() {
+
+  # Usage: _rgb_to_hex "r" "g" "b"
+
+  printf '#%02x%02x%02x\n' "$1" "$2" "$3"
+
+}

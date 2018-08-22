@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2154
+
+function _rand() {
+
+  # Usage: _rand "length"
+
+  local _FUNCTION_ID="_rand"
+  local _STATE="0"
+
+  local _length="$1"
+
+  _rval=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w "$_length" | head -n 1)
+
+  printf '%s\n' "$_rval"
+
+}
