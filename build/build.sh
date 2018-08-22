@@ -26,7 +26,7 @@ xargs -0 sed -i "s/__EMAIL__/$__EMAIL__/g"
 
 # shellcheck disable=SC2016
 find . -type f -not -path "./build/*" -print0 | \
-xargs -0 sed -i "s/__REPO__/$__REPO__/g"
+xargs -0 sed -i "s~__REPO__~$__REPO__~g"
 
 # shellcheck disable=SC2016
 find . -type f -not -path "./build/*" -print0 | \
