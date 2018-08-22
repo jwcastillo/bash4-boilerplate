@@ -10,7 +10,7 @@ cd ../project || exit 1
 mv bin/__NAME__ bin/"$__NAME__"
 mv doc/man8/__NAME__.8 doc/man8/"$__NAME__".8
 
-mkdir -p log
+mkdir -p log tmp
 
 find . -type f -not -path "./build/*" -print0 | \
 xargs -0 sed -i "s/__DATE__/$__DATE__/g"
