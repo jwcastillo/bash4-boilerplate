@@ -1,7 +1,5 @@
 # `bash4-boilerplate`
 
-<br>
-
 ## Description
 
 __LONG_DESCRIPTION__
