@@ -51,7 +51,7 @@ readonly _rel="${_init_directory}/.."
 # Directory structure.
 readonly _src="${_rel}/src"
 readonly _lib="${_rel}/lib"
-readonly _tmp="${_rel}/tmp"
+         _tmp="${_rel}/tmp"
 
 # Import external important files.
 source "${_src}/settings"
