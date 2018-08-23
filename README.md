@@ -1,5 +1,21 @@
 # `bash4-boilerplate`
 
+I'm not saying that this template is perfect, many things could be done better, otherwise I will be very happy if even some of these things will be used by you.
+
+I am waiting for your advice, tips and recommendations!
+
+## Bash style
+
+I would like you to stick to certain standards of writing in bash. I realize that it is not easy and time-consuming if you have certain habits. I do not expect 100% compliance and adherence to good practices, however, I would like you to try to use certain principles.
+
+The following should help:
+
+- [http://wiki.bash-hackers.org/](http://wiki.bash-hackers.org/)
+- [https://google.github.io/styleguide/shell.xml](https://google.github.io/styleguide/shell.xml)
+- [https://github.com/progrium/bashstyle](https://github.com/progrium/bashstyle)
+- [http://kvz.io/blog/2013/11/21/bash-best-practices/](http://kvz.io/blog/2013/11/21/bash-best-practices/)
+- [https://github.com/dylanaraps/pure-bash-bible]https://github.com/dylanaraps/pure-bash-bible)
+
 ## Functions
 
 - **travis-ci** compatibility
