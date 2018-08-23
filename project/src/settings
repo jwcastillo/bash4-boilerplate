@@ -48,6 +48,10 @@ p_trgb="2;2;37"
 c_trgb="1;1;38"
 x_trgb="1;2;38"
 
+# Declaration of output variables (--debug and --verbose params).
+stdout_mode=""
+printf_mode="verbose"
+
 # Specifies the call parameters of the script, the exact description
 # can be found in _help_ and file README.md.
 readonly _short_opt="h"

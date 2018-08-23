@@ -37,10 +37,6 @@ function __main__() {
 
   fi
 
-  # Declaration of output variables (--debug and --verbose params).
-  stdout_mode=""
-  printf_mode=""
-
   # Do not exit with nonzero on commands failed (--ignore-failed param).
   ignore_errors="0"
 
@@ -194,7 +190,14 @@ function __main__() {
   # Load external functions (from lib/ directory).
   _load standard/random/_rand
 
+  # Generates 32 characters random value.
+  _rand 32
 
+  # Printf special message on the screen.
+  _sprintf "info" "Hello World!"
+
+  # Log message to log/<script_name>.<date>.log.
+  _logger "info" "Hello World!"
 
   # ````````````````````````````````````````````````````````````````````````````
 

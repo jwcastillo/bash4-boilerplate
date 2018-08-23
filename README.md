@@ -6,8 +6,8 @@
 - **shellcheck** support
 - functions separated into files (the `lib` directory)
 - provided standard library (files with functions) in `lib/standard`
-- logging into the file with `_logger` function
-- displaying data to the screen with `_sprintf` function
+- logging into the file with `_logger` function (optional)
+- displaying data to the screen with `_sprintf` function (optional)
 
 **1. Clone this repository**
 
@@ -58,7 +58,7 @@ cd build
 
 Also remember about this few things:
 
-- logs are stored in `log/` directory
+- logs are stored in `log/<script_name>.<date>.log`
 - logs from comands output are stored in `log/stdout.log` file
 - add new script params to `_short_opt`, `_long_opt` and in `case` statement
     - also you should updated `_help_()` in `project/src/helpers` and man page in `project/doc/man8/`
