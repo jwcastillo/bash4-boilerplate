@@ -2,14 +2,22 @@
 
 <br>
 
-<p align="left">
+<p align="center">
+  <a href="https://img.shields.io/badge/Branch-master-green.svg">
+    <img src="https://img.shields.io/badge/Branch-master-green.svg"
+        alt="Branch">
+  </a>
+  <a href="https://img.shields.io/badge/Version-__VERSION__-lightgrey.svg">
+    <img src="https://img.shields.io/badge/Version-__VERSION__-lightgrey.svg"
+        alt="Version">
+  </a>
   <a href="__REPO__/__NAME__">
     <img src="__REPO__/__NAME__.svg?branch=master"
         alt="Travis-CI">
   </a>
-  <a href="__REPO__/__NAME__/tree/master/build">
-    <img src="https://img.shields.io/badge/Docker-Support-blue.svg"
-        alt="Docker">
+  <a href="http://www.gnu.org/licenses/">
+    <img src="https://img.shields.io/badge/license-GNU-blue.svg"
+        alt="License">
   </a>
 </p>
 
