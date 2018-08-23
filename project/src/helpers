@@ -536,7 +536,7 @@ function _help_() {
     $_init_name --help
 
   Options:
-        --help                      show this message
+        -h|--help                   show this message
         --ignore-failed             do not exit with nonzero on commands failed
 
 
