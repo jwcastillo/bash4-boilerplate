@@ -187,8 +187,10 @@ function __main__() {
   # Put here all your variable declarations, function calls
   # and all the other code blocks.
 
+
   # Load external functions (from lib/ directory).
   _load standard/random/_rand
+
 
   # Printf some special messages on the screen with _sprintf function.
   _sprintf "head" "it's a header"
@@ -197,14 +199,21 @@ function __main__() {
   # Log message to log/<script_name>.<date>.log.
   _logger "info" "it's a normal info"
 
+
   # Print normal format message with printf (or echo).
-  printf "%s\\n" "it's funny"
+  printf "%s\\n" "Generates random value"
 
   # Generates 32 characters random value.
   _rand 32
 
-  # Run command with _init_cmd function.
+
+  # Run command from _init_cmd function (with spinner) and log output into
+  # log/stdout.log.
   _init_cmd "ping -c 10 127.0.0.1"
+
+  # Check command status.
+  echo "$?"
+
 
   # ````````````````````````````````````````````````````````````````````````````
 
