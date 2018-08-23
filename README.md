@@ -1,5 +1,7 @@
 # `bash4-boilerplate`
 
+<h5 align="center">This project is constantly updated</h5>
+
 I'm not saying that this template is perfect, many things could be done better, otherwise I will be very happy if even some of these things will be used by you.
 
 I am waiting for your advice, tips and recommendations!
@@ -16,14 +18,15 @@ The following should help:
 - [http://kvz.io/blog/2013/11/21/bash-best-practices/](http://kvz.io/blog/2013/11/21/bash-best-practices/)
 - [https://github.com/dylanaraps/pure-bash-bible](https://github.com/dylanaraps/pure-bash-bible)
 
-## Functions
+## Some boilerplate functions
 
-- **travis-ci** compatibility
-- **shellcheck** support
-- functions separated into files (the `lib` directory)
+- **travis-ci** compatibility with **shellcheck**
+- functions separated into files (`lib` directory)
 - provided standard library (files with functions) in `lib/standard`
 - logging into the file with `_logger` function (optional)
 - displaying data to the screen with `_sprintf` function (optional)
+
+## Create your project
 
 **1. Clone this repository**
 
