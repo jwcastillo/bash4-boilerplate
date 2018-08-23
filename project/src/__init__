@@ -201,18 +201,22 @@ function __main__() {
 
 
   # Print normal format message with printf (or echo).
-  printf "%s\\n" "Generates random value"
+  printf "%s" "Generates random value: "
 
   # Generates 32 characters random value.
   _rand 32
 
 
-  # Run command from _init_cmd function (with spinner) and log output into
-  # log/stdout.log.
+  # Run command from _init_cmd function (with spinner), log output into
+  # log/stdout.log and check command status.
   _init_cmd "ping -c 10 127.0.0.1"
+  _state="$?"
 
-  # Check command status.
-  echo "$?"
+  if [[ "$_state" -eq 0 ]] ; then
+
+    printf "it's ok\\n"
+
+  fi
 
 
   # ````````````````````````````````````````````````````````````````````````````
