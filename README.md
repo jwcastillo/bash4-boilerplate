@@ -14,7 +14,7 @@ The following should help:
 - [https://google.github.io/styleguide/shell.xml](https://google.github.io/styleguide/shell.xml)
 - [https://github.com/progrium/bashstyle](https://github.com/progrium/bashstyle)
 - [http://kvz.io/blog/2013/11/21/bash-best-practices/](http://kvz.io/blog/2013/11/21/bash-best-practices/)
-- [https://github.com/dylanaraps/pure-bash-bible]https://github.com/dylanaraps/pure-bash-bible)
+- [https://github.com/dylanaraps/pure-bash-bible](https://github.com/dylanaraps/pure-bash-bible)
 
 ## Functions
 
