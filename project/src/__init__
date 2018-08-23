@@ -44,11 +44,6 @@ function __main__() {
   # Do not exit with nonzero on commands failed (--ignore-failed param).
   ignore_errors="0"
 
-  # We place here used commands at script runtime, as strings to anything
-  # unnecessarily run.
-  readonly commands=("basename" "dirname" "stat" "date" "grep" "cut" \
-                     "sed" "gzip" "tar" "mktemp")
-
   # If you intend to specify the full path to the command we do it like:
   # readonly exec_gzip="/bin/gzip"
 
@@ -95,7 +90,7 @@ function __main__() {
 
   # Specifies the call parameters of the script, the exact description
   # can be found in _help_ and file README.md.
-  local _short_opt=""
+  local _short_opt="h"
   local _long_opt="help"
 
   _GETOPT_PARAMS=$(getopt -o "${_short_opt}" --long "${_long_opt}" \
@@ -121,7 +116,7 @@ function __main__() {
 
     case $1 in
 
-      --help)
+      -h|--help)
 
         _help_
 

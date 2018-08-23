@@ -28,8 +28,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 #   0077 - only for user access (more restrictive)
 umask 0027
 
-# Import external function, e.g.:
-# import lib/trim_string
+# Set script version.
+readonly _version="__VERSION__"
 
 # Run script only with you're root.
 if_root="true"
@@ -47,6 +47,17 @@ h_trgb="1;2;36"
 p_trgb="2;2;37"
 c_trgb="1;1;38"
 x_trgb="1;2;38"
+
+# We place here used commands at script runtime, as strings to anything
+# unnecessarily run.
+readonly commands=("basename" "dirname" "stat" "date" "grep" "cut" \
+                   "sed" "gzip" "tar" "mktemp")
+
+# Set of external files with variables, functions and other.
+# Example:
+#   - create lib/kill_process - file with your function
+#   - _fd_stack=("kill_process") - says to include this file in the script
+readonly _fd_stack=()
 
 # Catch the listed SIGNALS, which may be signal names with or without the SIG
 # prefix, or signal numbers. By default, only the signal 0 or EXIT is supported.

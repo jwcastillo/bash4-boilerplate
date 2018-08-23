@@ -37,9 +37,6 @@
 ### END SCRIPT INFO
 
 
-# Set script version.
-readonly _version="__VERSION__"
-
 # The array that store call parameters.
 __init_params=()
 __script_params=("$@")

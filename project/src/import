@@ -11,12 +11,6 @@
 # of each of them is in lib directory. The fd_stack array stores the names of
 # attached files. If you create a new file with some interesting function,
 # name it appropriately and insert to the array.
-#
-# Example:
-#   - lib/kill_process - file with your function
-#   - _fd_stack=("kill_process") - says to include this file in the script
-readonly _fd_stack=()
-
 if [[ "${#_fd_stack[@]}" -ne 0 ]] ; then
 
   for _fd in "${_fd_stack[@]}" ; do
