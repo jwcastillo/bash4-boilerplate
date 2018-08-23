@@ -335,6 +335,20 @@ function _sprintf() {
 
           fi
 
+        elif [[ "$_s_type" == "" ]] ; then
+
+          if [[ "$s_color" == "true" ]] ; then
+
+            c_trgb="1;41"
+
+            printf '\e['${c_trgb}'m%s\e[m\n' "$s_char" "$_s_info"
+
+          else
+
+            printf '[\e['${s_trgb}'m%s\e[m] %s\n' "$s_char" "$_s_info"
+
+          fi
+
         fi
 
       fi
