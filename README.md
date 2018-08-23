@@ -1,9 +1,5 @@
 # `bash4-boilerplate`
 
-## Description
-
-__LONG_DESCRIPTION__
-
 ## How To Use
 
 1. Clone this repository
