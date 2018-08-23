@@ -3,7 +3,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC1090,SC1091,SC2034,SC2048,SC2086,SC2154
 
-function _reverse_array() {
+_reverse_array() {
 
   # Usage: _reverse_array "array"
 

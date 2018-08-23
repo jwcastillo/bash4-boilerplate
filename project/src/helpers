@@ -20,7 +20,7 @@
 #   _exit_ 0
 #
 
-function _exit_() {
+_exit_() {
 
   local _FUNCTION_ID="_exit_"
   local _STATE="0"
@@ -61,7 +61,7 @@ function _exit_() {
 #   trap "_get_trap_SIG SIGS" SIGHUP SIGTERM
 #
 
-function _get_trap_SIG() {
+_get_trap_SIG() {
 
   local _FUNCTION_ID="_get_trap_SIG"
   local _STATE="${_STATUS:-}"
@@ -141,7 +141,7 @@ function _get_trap_SIG() {
 #   _logger "stop" "not connected"
 #
 
-function _logger() {
+_logger() {
 
   local _FUNCTION_ID="_logger"
   local _STATE="0"
@@ -203,7 +203,7 @@ function _logger() {
 #   _sprintf "head" "correct certificate: $_ssl_cert_file"
 #
 
-function _sprintf() {
+_sprintf() {
 
   local _FUNCTION_ID="_sprintf"
   local _STATE="0"
@@ -374,7 +374,7 @@ function _sprintf() {
 #   _init_cmd "eval cd /etc/init.d && ls"
 #
 
-function _init_cmd() {
+_init_cmd() {
 
   local _FUNCTION_ID="_init_cmd"
   local _STATE="0"
@@ -453,7 +453,7 @@ function _init_cmd() {
 #   _load "head" "/tmp/file.cfg"
 #
 
-function _load() {
+_load() {
 
   local _FUNCTION_ID="_load"
   local _STATE="0"
@@ -520,7 +520,7 @@ function _load() {
 #   _help_
 #
 
-function _help_() {
+_help_() {
 
   local _FUNCTION_ID="_help_"
   local _STATE=0
@@ -566,7 +566,7 @@ function _help_() {
 #   _before_init
 #
 
-function _before_init() {
+_before_init() {
 
   local _FUNCTION_ID="_before_init"
   local _STATE=0
@@ -602,7 +602,7 @@ function _before_init() {
 #   _after_init
 #
 
-function _after_init() {
+_after_init() {
 
   local _FUNCTION_ID="_after_init"
   local _STATE=0

@@ -3,7 +3,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC1090,SC1091,SC2034,SC2154
 
-function _rgb_to_hex() {
+_rgb_to_hex() {
 
   # Usage: _rgb_to_hex "r" "g" "b"
 
